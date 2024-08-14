@@ -12,6 +12,6 @@ config.harfbuzz_features = { "calt=0", "clig=0", "liga=0", "zero=0" }
 config.freetype_load_flags = "DEFAULT|NO_AUTOHINT"
 config.front_end = "WebGpu"
 config.window_decorations = "TITLE|RESIZE|MACOS_FORCE_DISABLE_SHADOW"
-config.native_macos_fullscreen_mode = false
+config.native_macos_fullscreen_mode = true
 
 return config
