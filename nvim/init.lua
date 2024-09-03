@@ -61,6 +61,14 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 	{ "numToStr/Comment.nvim", opts = {} },
+	{
+		"nvim-lualine/lualine.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		opts = {
+			theme = "auto",
+			globalstatus = false,
+		},
+	},
 	{ -- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
 		opts = {
@@ -73,6 +81,7 @@ require("lazy").setup({
 			},
 		},
 	},
+
 	{
 		"nvim-tree/nvim-tree.lua",
 		version = "*",
@@ -84,9 +93,37 @@ require("lazy").setup({
 			require("nvim-tree").setup({})
 		end,
 	},
-	{ -- Autoclose brackets, parens etc.
-		"m4xshen/autoclose.nvim",
+
+	{
+		"folke/flash.nvim",
+		event = "VeryLazy",
 		opts = {},
+		keys = {
+			{
+				"S",
+				mode = { "n", "x", "o" },
+				function()
+					require("flash").treesitter()
+				end,
+				desc = "Flash",
+			},
+		},
+	},
+
+	{ -- Autoclose brackets, parens etc.
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		config = function()
+			require("nvim-autopairs").setup({
+				enable_check_bracket_line = false,
+			})
+
+			local npairs = require("nvim-autopairs")
+
+			npairs.setup({
+				check_ts = true,
+			})
+		end,
 	},
 
 	{
@@ -174,6 +211,11 @@ require("lazy").setup({
 		lazy = false,
 		priority = 1000,
 		config = function()
+			require("kanagawa").setup({
+				theme = "dragon",
+				keywordStyle = { italic = false },
+			})
+
 			vim.cmd("colorscheme kanagawa-dragon")
 		end,
 	},
@@ -424,6 +466,25 @@ require("lazy").setup({
 					}),
 				},
 			})
+
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			local handlers = require("nvim-autopairs.completion.handlers")
+			cmp.event:on(
+				"confirm_done",
+				cmp_autopairs.on_confirm_done({
+					filetypes = {
+						["*"] = {
+							["("] = {
+								kind = {
+									cmp.lsp.CompletionItemKind.Function,
+									cmp.lsp.CompletionItemKind.Method,
+								},
+								handler = handlers["*"],
+							},
+						},
+					},
+				})
+			)
 		end,
 	},
 }, {
