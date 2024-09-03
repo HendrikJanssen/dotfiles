@@ -8,6 +8,8 @@ vim.g.set_java_home = function(version)
 	vim.g.java_home_version = version
 end
 
+vim.filetype.add({ extension = { mcss = "css" } })
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
@@ -39,11 +41,11 @@ vim.keymap.set({ "i", "t", "v" }, "ö", "<ESC>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 --vim.keymap.set("n", "s", "")
 vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save current file" })
-vim.keymap.set("n", "<leader>t", ":NvimTreeToggle<CR>", { desc = "Save current file" })
-vim.keymap.set("n", "<leader>j", ":bprevious<CR>", { desc = "Next buffer" })
-vim.keymap.set("n", "<leader>k", ":bnext<CR>", { desc = "Previous buffer" })
+vim.keymap.set("n", "<leader>t", ":NvimTreeToggle<CR>", { desc = "Toggle NvimTree" })
 vim.keymap.set("n", "<leader>d", ":bp<bar>sp<bar>bn<bar>bd<CR>", { desc = "Close buffer" })
 vim.keymap.set("n", "<leader>sp", ":vs<CR>", { desc = "Split view" })
+vim.keymap.set("n", "<leader>j", "<C-w><C-j>", { desc = "Focus upper window" })
+vim.keymap.set("n", "<leader>k", "<C-w><C-k>", { desc = "Focus lower window" })
 vim.keymap.set("n", "<leader>h", "<C-w><C-h>", { desc = "Move focus to the left window" })
 vim.keymap.set("n", "<leader>l", "<C-w><C-l>", { desc = "Move focus to the right window" })
 vim.keymap.set("n", "e", "$")
@@ -168,13 +170,11 @@ require("lazy").setup({
 	},
 
 	{
-		"AlexvZyl/nordic.nvim",
+		"rebelot/kanagawa.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			require("nordic").load({
-				bright_border = true,
-			})
+			vim.cmd("colorscheme kanagawa-dragon")
 		end,
 	},
 	{ -- Autoformat
@@ -191,7 +191,7 @@ require("lazy").setup({
 			},
 		},
 		opts = {
-			notify_on_error = false,
+			notify_on_error = true,
 			format_on_save = function(bufnr)
 				-- Disable "format_on_save lsp_fallback" for languages that don't
 				-- have a well standardized coding style. You can add additional
@@ -202,24 +202,10 @@ require("lazy").setup({
 					lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
 				}
 			end,
-			formatters = {
-				sqlfluff_oracle = {
-					command = "sqlfluff",
-					args = {
-						"fix",
-						"--disable-progress-bar",
-						"-f",
-						"-d Oracle",
-						"-n",
-						"-",
-					},
-					stdin = true,
-				},
-			},
 			formatters_by_ft = {
 				lua = { "stylua" },
 				sql = { "sqlfluff" },
-				osql = { "sqlfluff_oracle" },
+				css = { "stylelint" },
 			},
 		},
 	},
@@ -315,6 +301,7 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua",
+				"stylelint",
 				"codelldb",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
@@ -341,6 +328,7 @@ require("lazy").setup({
 			ensure_installed = {
 				"bash",
 				"c",
+				"css",
 				"toml",
 				"diff",
 				"html",

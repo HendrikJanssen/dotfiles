@@ -13,5 +13,10 @@ config.freetype_load_flags = "DEFAULT|NO_AUTOHINT"
 config.front_end = "WebGpu"
 config.window_decorations = "TITLE|RESIZE|MACOS_FORCE_DISABLE_SHADOW"
 config.native_macos_fullscreen_mode = true
-
+config.window_padding = {
+	left = 0,
+	right = 0,
+	top = 0,
+	bottom = 0,
+}
 return config

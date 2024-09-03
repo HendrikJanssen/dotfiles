@@ -100,7 +100,7 @@ if [[ -n $SSH_CONNECTION ]]; then
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-path=('/opt/homebrew/bin' '/opt/homebrew/sbin' '/Users/hjanssen/.dotnet/tools' $path)
+path=('/opt/homebrew/bin' '/opt/homebrew/sbin' "$HOME/.local/share/nvim/mason/bin" "$HOME/.dotnet/tools" $path)
 
 export GPG_TTY=$(tty)
 
