@@ -48,7 +48,7 @@ vim.keymap.set("n", "<leader>j", "<C-w><C-j>", { desc = "Focus upper window" })
 vim.keymap.set("n", "<leader>k", "<C-w><C-k>", { desc = "Focus lower window" })
 vim.keymap.set("n", "<leader>h", "<C-w><C-h>", { desc = "Move focus to the left window" })
 vim.keymap.set("n", "<leader>l", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "e", "$")
+vim.keymap.set({ "n", "v" }, "e", "$")
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -92,22 +92,6 @@ require("lazy").setup({
 		config = function()
 			require("nvim-tree").setup({})
 		end,
-	},
-
-	{
-		"folke/flash.nvim",
-		event = "VeryLazy",
-		opts = {},
-		keys = {
-			{
-				"S",
-				mode = { "n", "x", "o" },
-				function()
-					require("flash").treesitter()
-				end,
-				desc = "Flash",
-			},
-		},
 	},
 
 	{ -- Autoclose brackets, parens etc.
@@ -293,7 +277,6 @@ require("lazy").setup({
 					map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
 					map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 					map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-					map("K", vim.lsp.buf.hover, "Hover Documentation")
 					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 					map("<leader>tb", require("dap").toggle_breakpoint, "[T]oggle [B]reakpoint")
 					map("<leader>cd", require("dap").continue, "[C]ontinue [D]ebugging")
@@ -402,14 +385,29 @@ require("lazy").setup({
 				enable = true,
 			},
 			indent = { enable = true },
+			textobjects = {
+				move = {
+					enable = true,
+					goto_next_start = {
+						["J"] = { query = "@function.outer", desc = "Next scope" },
+					},
+					goto_previous_start = {
+						["K"] = { query = "@function.outer", desc = "Previous scope" },
+					},
+				},
+				select = {
+					enable = true,
+					lookahead = true,
+					keymaps = {
+						["ab"] = { query = "@block.outer", desc = "select around block" },
+						["ib"] = { query = "@block.inner", desc = "select inside block" },
+					},
+				},
+			},
 		},
 		config = function(_, opts)
 			require("nvim-treesitter.install").prefer_git = true
-			---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup(opts)
-			--    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-			--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-			--
 			--local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 			--parser_config.groovy = {
 			--	install_info = {
@@ -421,6 +419,13 @@ require("lazy").setup({
 			--	},
 			--}
 		end,
+	},
+
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+		},
 	},
 
 	{ -- Autocompletion
