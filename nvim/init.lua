@@ -51,7 +51,6 @@ vim.keymap.set("n", "<leader>j", "<C-w><C-j>", { desc = "Focus upper window" })
 vim.keymap.set("n", "<leader>k", "<C-w><C-k>", { desc = "Focus lower window" })
 vim.keymap.set("n", "<leader>h", "<C-w><C-h>", { desc = "Move focus to the left window" })
 vim.keymap.set("n", "<leader>l", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set({ "n", "v" }, "e", "$")
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
