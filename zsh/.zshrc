@@ -92,4 +92,6 @@ runCommand() {
 
 if [[ $(uname) == "Darwin" ]]; then
     source "$HOME"/dotfiles/zsh/mac.zsh
+elif command -v apt > /dev/null; then
+    source "$HOME"/dotfiles/zsh/linux.zsh
 fi
