@@ -74,13 +74,6 @@ plugins=(git extract)
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
@@ -88,41 +81,15 @@ if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='nvim'
  fi
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-path=('/opt/homebrew/bin' '/opt/homebrew/sbin' "$HOME/.local/share/nvim/mason/bin" "$HOME/.dotnet/tools" $path)
-
-export GPG_TTY=$(tty)
+path=("$HOME/.local/share/nvim/mason/bin" $path)
 
 alias mclie="mvn clean install exec:exec"
 alias mcli="mvn clean install"
-
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-use_java() {
-    export JAVA_HOME=$(/usr/libexec/java_home -F -v $1)
-}
 
 runCommand() {
     for d in ./*/ ; do /bin/zsh -c "(cd "$d" && "$@")"; done
 }
 
-use_java 17
-
-PATH="/Users/hjanssen/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/Users/hjanssen/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/Users/hjanssen/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/Users/hjanssen/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/Users/hjanssen/perl5"; export PERL_MM_OPT;
+if [[ $(uname) == "Darwin" ]]; then
+    source "$HOME"/dotfiles/zsh/mac.zsh
+fi
