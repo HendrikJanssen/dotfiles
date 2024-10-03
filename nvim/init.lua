@@ -92,7 +92,43 @@ require("lazy").setup({
 			"nvim-tree/nvim-web-devicons",
 		},
 		config = function()
-			require("nvim-tree").setup({})
+			local HEIGHT_RATIO = 0.9
+			local WIDTH_RATIO = 0.7
+
+			require("nvim-tree").setup({
+				update_focused_file = {
+					enable = true,
+				},
+				renderer = {
+					group_empty = true,
+				},
+				view = {
+					float = {
+						enable = true,
+						open_win_config = function()
+							local screen_w = vim.opt.columns:get()
+							local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
+							local window_w = screen_w * WIDTH_RATIO
+							local window_h = screen_h * HEIGHT_RATIO
+							local window_w_int = math.floor(window_w)
+							local window_h_int = math.floor(window_h)
+							local center_x = (screen_w - window_w) / 2
+							local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
+							return {
+								border = "rounded",
+								relative = "editor",
+								row = center_y,
+								col = center_x,
+								width = window_w_int,
+								height = window_h_int,
+							}
+						end,
+					},
+					width = function()
+						return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
+					end,
+				},
+			})
 		end,
 	},
 
@@ -332,8 +368,8 @@ require("lazy").setup({
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 			local servers = {
-				groovyls = {},
 				pyright = {},
+				ts_ls = {},
 			}
 			require("mason").setup()
 
@@ -372,6 +408,7 @@ require("lazy").setup({
 				"diff",
 				"html",
 				"javascript",
+				"typescript",
 				"lua",
 				"luadoc",
 				"markdown",
@@ -380,7 +417,6 @@ require("lazy").setup({
 				"rust",
 				"sql",
 				"java",
-				"groovy",
 			},
 			auto_install = false,
 			highlight = {
@@ -410,16 +446,6 @@ require("lazy").setup({
 		config = function(_, opts)
 			require("nvim-treesitter.install").prefer_git = true
 			require("nvim-treesitter.configs").setup(opts)
-			--local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-			--parser_config.groovy = {
-			--	install_info = {
-			--		url = "~/Projects/tree-sitter-groovy", -- local path or git repo
-			--		files = { "src/parser.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
-			--		branch = "main", -- default branch in case of git repo if different from master
-			--		generate_requires_npm = false, -- if stand-alone parser without npm dependencies
-			--		requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
-			--	},
-			--}
 		end,
 	},
 
