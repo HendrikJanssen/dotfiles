@@ -86,6 +86,8 @@ path=("$HOME/.local/share/nvim/mason/bin" $path)
 alias mclie="mvn clean install exec:exec"
 alias mcli="mvn clean install"
 
+export OS_HOST="book-dev-os-9"
+
 runCommand() {
     for d in ./*/ ; do /bin/zsh -c "(cd "$d" && "$@")"; done
 }
