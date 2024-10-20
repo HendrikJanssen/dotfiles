@@ -12,6 +12,8 @@ config.use_fancy_tab_bar = false
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0", "zero=0" }
 config.freetype_load_flags = "DEFAULT|NO_AUTOHINT"
 config.window_decorations = "TITLE|RESIZE|MACOS_FORCE_DISABLE_SHADOW"
+config.send_composed_key_when_left_alt_is_pressed = true
+config.send_composed_key_when_right_alt_is_pressed = true
 config.native_macos_fullscreen_mode = true
 config.window_padding = {
 	left = 0,
@@ -21,9 +23,6 @@ config.window_padding = {
 }
 
 config.disable_default_key_bindings = true
-
-config.send_composed_key_when_left_alt_is_pressed = true
-config.send_composed_key_when_right_alt_is_pressed = false
 
 local act = wezterm.action
 config.keys = {
