@@ -9,13 +9,18 @@ vim.g.set_java_home = function(version)
 end
 
 vim.filetype.add({ extension = { mcss = "css" } })
+vim.filetype.add({ extension = { jinja = "html" } })
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-vim.g.db_ui_disable_progress_bar = 1
+
+-- gruvbox settings
+vim.g.gruvbox_contrast_dark = "hard"
+vim.g.gruvbox_invert_selection = 0
+
 vim.opt.number = true
 vim.opt.termguicolors = true
 vim.opt.mouse = "a"
@@ -38,8 +43,8 @@ vim.opt.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 vim.keymap.set({ "i", "t", "v" }, "ö", "<ESC>")
+vim.keymap.set({ "t" }, "ö", "<C-\\><C-n>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
---vim.keymap.set("n", "s", "")
 vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save current file" })
 vim.keymap.set("n", "<leader>t", ":NvimTreeToggle<CR>", { desc = "Toggle NvimTree" })
 vim.keymap.set("n", "<leader>d", ":bp<bar>sp<bar>bn<bar>bd<CR>", { desc = "Close buffer" })
@@ -62,7 +67,9 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
+
 	{ "numToStr/Comment.nvim", opts = {} },
+
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -71,6 +78,7 @@ require("lazy").setup({
 			globalstatus = false,
 		},
 	},
+
 	{ -- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
 		opts = {
@@ -241,16 +249,9 @@ require("lazy").setup({
 	},
 
 	{
-		"rebelot/kanagawa.nvim",
-		lazy = false,
-		priority = 1000,
+		"morhetz/gruvbox",
 		config = function()
-			require("kanagawa").setup({
-				theme = "dragon",
-				keywordStyle = { italic = false },
-			})
-
-			vim.cmd("colorscheme kanagawa-dragon")
+			vim.cmd.colorscheme("gruvbox")
 		end,
 	},
 	{ -- Autoformat
@@ -415,6 +416,7 @@ require("lazy").setup({
 				"vim",
 				"vimdoc",
 				"rust",
+				"swift",
 				"sql",
 				"java",
 			},
