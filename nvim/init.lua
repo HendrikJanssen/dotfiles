@@ -13,6 +13,7 @@ vim.filetype.add({ extension = { jinja = "html" } })
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+
 vim.g.have_nerd_font = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -21,6 +22,13 @@ vim.g.loaded_netrwPlugin = 1
 vim.g.gruvbox_contrast_dark = "hard"
 vim.g.gruvbox_invert_selection = 0
 
+-- netrw settings
+vim.g.netrw_keepdir = 0
+vim.g.netrw_banner = 0
+vim.keymap.set({ "n" }, "<leader>dd", ":Lexplore<CR>")
+vim.keymap.set({ "n" }, "<leader>dc", ":Lexplore %:p:h<CR>")
+
+-- basic settings
 vim.opt.number = true
 vim.opt.termguicolors = true
 vim.opt.mouse = "a"
@@ -46,7 +54,6 @@ vim.keymap.set({ "i", "t", "v" }, "ö", "<ESC>")
 vim.keymap.set({ "t" }, "ö", "<C-\\><C-n>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save current file" })
-vim.keymap.set("n", "<leader>t", ":NvimTreeToggle<CR>", { desc = "Toggle NvimTree" })
 vim.keymap.set("n", "<leader>d", ":bp<bar>sp<bar>bn<bar>bd<CR>", { desc = "Close buffer" })
 vim.keymap.set("n", "<leader>tt", function()
 	vim.diagnostic.open_float(nil, { focus = true, scope = "cursor" })
@@ -90,54 +97,6 @@ require("lazy").setup({
 				changedelete = { text = "~" },
 			},
 		},
-	},
-
-	{
-		"nvim-tree/nvim-tree.lua",
-		version = "*",
-		lazy = false,
-		dependencies = {
-			"nvim-tree/nvim-web-devicons",
-		},
-		config = function()
-			local HEIGHT_RATIO = 0.9
-			local WIDTH_RATIO = 0.7
-
-			require("nvim-tree").setup({
-				update_focused_file = {
-					enable = true,
-				},
-				renderer = {
-					group_empty = true,
-				},
-				view = {
-					float = {
-						enable = true,
-						open_win_config = function()
-							local screen_w = vim.opt.columns:get()
-							local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
-							local window_w = screen_w * WIDTH_RATIO
-							local window_h = screen_h * HEIGHT_RATIO
-							local window_w_int = math.floor(window_w)
-							local window_h_int = math.floor(window_h)
-							local center_x = (screen_w - window_w) / 2
-							local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
-							return {
-								border = "rounded",
-								relative = "editor",
-								row = center_y,
-								col = center_x,
-								width = window_w_int,
-								height = window_h_int,
-							}
-						end,
-					},
-					width = function()
-						return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
-					end,
-				},
-			})
-		end,
 	},
 
 	{ -- Autoclose brackets, parens etc.
