@@ -1,3 +1,19 @@
+vim.g.get_os = function()
+	local osname
+	-- ask LuaJIT first
+	if jit then
+		return jit.os
+	end
+
+	-- Unix, Linux variants
+	local fh, err = assert(io.popen("uname -o 2>/dev/null", "r"))
+	if fh then
+		osname = fh:read()
+	end
+
+	return osname or "Windows"
+end
+
 vim.g.set_java_home = function(version)
 	if vim.g.java_home_version == version then
 		return
@@ -12,6 +28,7 @@ vim.filetype.add({ extension = { mcss = "css" } })
 vim.filetype.add({ extension = { jinja = "html" } })
 
 vim.g.mapleader = " "
+
 vim.g.maplocalleader = " "
 
 vim.g.have_nerd_font = true
@@ -20,11 +37,8 @@ vim.g.have_nerd_font = true
 vim.g.gruvbox_contrast_dark = "hard"
 vim.g.gruvbox_invert_selection = 0
 
--- netrw settings
-vim.g.netrw_keepdir = 0
-vim.g.netrw_banner = 0
-vim.keymap.set({ "n" }, "<leader>dd", ":Lexplore<CR>")
-vim.keymap.set({ "n" }, "<leader>dc", ":Lexplore %:p:h<CR>")
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrw = 1
 
 -- basic settings
 vim.opt.number = true
@@ -32,6 +46,7 @@ vim.opt.termguicolors = true
 vim.opt.mouse = "a"
 vim.opt.showmode = false
 vim.opt.clipboard = "unnamedplus"
+
 vim.opt.breakindent = true
 vim.opt.signcolumn = "yes"
 vim.opt.ignorecase = true
@@ -61,6 +76,7 @@ vim.keymap.set("n", "<leader>j", "<C-w><C-j>", { desc = "Focus upper window" })
 vim.keymap.set("n", "<leader>k", "<C-w><C-k>", { desc = "Focus lower window" })
 vim.keymap.set("n", "<leader>h", "<C-w><C-h>", { desc = "Move focus to the left window" })
 vim.keymap.set("n", "<leader>l", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<leader>dd", "<CMD>Oil<CR>", { desc = "Open parent directory of current file" })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -73,17 +89,6 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
-	{ "numToStr/Comment.nvim", opts = {} },
-
-	{
-		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		opts = {
-			theme = "auto",
-			globalstatus = false,
-		},
-	},
-
 	{ -- Adds git related signs to the gutter, as well as utilities for managing changes
 		"lewis6991/gitsigns.nvim",
 		opts = {
@@ -95,6 +100,16 @@ require("lazy").setup({
 				changedelete = { text = "~" },
 			},
 		},
+	},
+
+	{
+		"stevearc/oil.nvim",
+		opts = {
+			view_options = {
+				show_hidden = true,
+			},
+		},
+		dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
 	},
 
 	{ -- Autoclose brackets, parens etc.
@@ -122,17 +137,6 @@ require("lazy").setup({
 			):with_move(function(opts)
 				return opts.char == ">"
 			end))
-		end,
-	},
-
-	{
-		"rcarriga/nvim-dap-ui",
-		dependencies = {
-			"mfussenegger/nvim-dap",
-			"nvim-neotest/nvim-nio",
-		},
-		config = function()
-			require("dapui").setup()
 		end,
 	},
 
@@ -211,6 +215,7 @@ require("lazy").setup({
 			vim.cmd.colorscheme("gruvbox")
 		end,
 	},
+
 	{ -- Autoformat
 		"stevearc/conform.nvim",
 		lazy = false,
@@ -274,9 +279,6 @@ require("lazy").setup({
 					map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 					map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-					map("<leader>tb", require("dap").toggle_breakpoint, "[T]oggle [B]reakpoint")
-					map("<leader>cd", require("dap").continue, "[C]ontinue [D]ebugging")
-					map("<leader>du", require("dapui").toggle, "[D]ebugging [U]I")
 
 					vim.api.nvim_create_user_command("RustDebug", function()
 						vim.cmd.RustLsp({ "debuggables", bang = true })
@@ -364,6 +366,7 @@ require("lazy").setup({
 				"css",
 				"toml",
 				"diff",
+				"xml",
 				"html",
 				"javascript",
 				"typescript",

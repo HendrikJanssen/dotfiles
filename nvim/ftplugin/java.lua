@@ -1,14 +1,16 @@
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-local workspace_dir = "/Users/hendrikjanssen/.local/share/nvim/jdtls/" .. project_name
+local workspace_dir = vim.fn.expand("$HOME/.local/share/nvim/jdtls/" .. project_name)
 
 local status, jdtls = pcall(require, "jdtls")
 if not status then
 	return
 end
 
+vim.notify("java")
+
 local extendedClientCapabilities = jdtls.extendedClientCapabilities
 
-vim.g.set_java_home("17")
+-- vim.g.set_java_home("17")
 
 local config = {
 	cmd = {
@@ -26,10 +28,10 @@ local config = {
 		"--add-opens",
 		"java.base/java.lang=ALL-UNNAMED",
 
-		"--jvm-arg=-javaagent:/Users/hendrikjanssen/dotfiles/nvim/lombok.jar",
+		vim.fn.expand("--jvm-arg=-javaagent:$HOME/dotfiles/nvim/lombok.jar"),
 
 		"-configuration",
-		"/opt/homebrew/opt/jdtls/libexec/config_mac_arm",
+		vim.fn.expand("$HOME/jdtls/config_linux/"),
 
 		-- See `data directory configuration` section in the README
 		"-data",

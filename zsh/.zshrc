@@ -81,7 +81,7 @@ if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='nvim'
  fi
 
-path=("$HOME/.local/share/nvim/mason/bin" $path)
+path=("$HOME/.local/share/nvim/mason/bin" "$HOME/jdtls/bin" $path)
 
 alias mclie="mvn clean install exec:exec"
 alias mcli="mvn clean install"
