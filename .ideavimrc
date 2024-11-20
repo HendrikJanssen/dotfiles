@@ -22,6 +22,7 @@ nmap <leader>w <Action>(SaveAll)
 imap <C-l> <Action>(EditorChooseLookupItem)
 nmap <leader>sp <Action>(SplitVertically)
 nmap <leader>d <Action>(CloseContent)
+nmap <leader>rn <Action>(RenameElement)
 nmap <leader>f <Action>(ReformatCode)
 nmap <leader>sf <Action>(SearchEverywhere)
 nmap <leader>sg <Action>(FindInPath)
@@ -39,6 +40,8 @@ Plug 'machakann/vim-highlightedyank'
 " Commentary plugin
 Plug 'tpope/vim-commentary'
 
+" Share clipboard with system
+set clipboard+=unnamedplus
 
 "" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
 "" Map \r to the Reformat Code action
